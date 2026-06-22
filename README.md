@@ -15,3 +15,7 @@ python3 -m http.server 8000
 ## GitHub Pages
 
 仓库使用 GitHub Pages 从 `main` 分支根目录发布。
+
+## 参考素材
+
+`reference/morse-playground/` 保留了制作当前页面时参考过的原始素材目录，包括源视频、完整抽帧、O/Z 字母拆帧和 contact 图。当前页面实际引用的是 `reference/source.mp4` 与 `reference/video-contact.jpg`，这两个文件分别与 `reference/morse-playground/source.mp4` 和 `reference/morse-playground/contact.jpg` 内容一致。
