@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Morse Memory Lab</title>
+    <link
+      rel="icon"
+      href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Crect width="64" height="64" rx="16" fill="%23131b20"/%3E%3Ccircle cx="20" cy="32" r="6" fill="%238ad3ff"/%3E%3Crect x="30" y="26" width="18" height="12" rx="6" fill="%23ff6d63"/%3E%3C/svg%3E'
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&family=Sora:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body data-theme="tech-blue">
+    <main class="shell">
+      <section class="studio studio--primary">
+        <div class="studio-header">
+          <div>
+            <p class="eyebrow" data-i18n="studio.eyebrow">实验台</p>
+            <h2 data-i18n="studio.title">摩斯密码工具台</h2>
+            <p class="studio-summary" data-i18n="studio.summary">
+              输入英文短句后会自动转成大写、拆成字母，并按标准莫斯时值顺序播放。
+            </p>
+          </div>
+        </div>
+        <div class="composer-card composer-card--tool">
+          <div class="tool-input-head">
+            <div class="tool-input-meta">
+              <label class="field-label" for="messageInput" data-i18n="input.label">英文或短句</label>
+              <span class="field-help-wrap">
+                <button
+                  class="field-help"
+                  type="button"
+                  data-i18n-aria-label="input.help.aria"
+                  data-i18n-title="input.help.aria"
+                  aria-label="支持输入格式说明"
+                  aria-describedby="inputFormatTip"
+                >
+                  ?
+                </button>
+                <span class="field-tooltip" id="inputFormatTip" role="tooltip" data-i18n="input.help.body">
+                  支持 A-Z、数字和常见标点。会自动转成大写；空格会生成单词停顿。
+                </span>
+              </span>
+            </div>
+            <details class="settings-popover" id="settingsPopover">
+              <summary
+                class="settings-trigger"
+                data-i18n-aria-label="settings.open"
+                data-i18n-title="settings.open"
+                aria-label="打开设置"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    d="M12 8.5a3.5 3.5 0 1 0 0 7a3.5 3.5 0 0 0 0-7Zm8 3.5l-1.74-.56a6.56 6.56 0 0 0-.49-1.18l.83-1.63l-1.9-1.9l-1.63.83a6.56 6.56 0 0 0-1.18-.49L12 4l-.56 1.74a6.56 6.56 0 0 0-1.18.49l-1.63-.83l-1.9 1.9l.83 1.63c-.21.38-.38.78-.49 1.18L4 12l1.74.56c.11.4.28.8.49 1.18l-.83 1.63l1.9 1.9l1.63-.83c.38.21.78.38 1.18.49L12 20l.56-1.74c.4-.11.8-.28 1.18-.49l1.63.83l1.9-1.9l-.83-1.63c.21-.38.38-.78.49-1.18L20 12Z"
+                  ></path>
+                </svg>
+              </summary>
+              <div class="settings-panel">
+                <div class="settings-head">
+                  <p class="settings-kicker" data-i18n="settings.title">设置</p>
+                  <p class="settings-summary" data-i18n="settings.summary">主题、界面语言和播放节奏</p>
+                </div>
+                <label class="settings-field">
+                  <span class="settings-label" data-i18n="settings.theme">配色</span>
+                  <select id="themeSelect">
+                    <option value="tech-blue" data-i18n="settings.themeTech">科技蓝</option>
+                    <option value="macaron" data-i18n="settings.themeMacaron">马卡龙</option>
+                  </select>
+                </label>
+                <label class="settings-field">
+                  <span class="settings-label" data-i18n="settings.language">界面语言</span>
+                  <select id="languageSelect">
+                    <option value="zh" data-i18n="settings.languageZh">中文</option>
+                    <option value="en" data-i18n="settings.languageEn">English</option>
+                  </select>
+                </label>
+                <div class="settings-field">
+                  <div class="settings-range-head">
+                    <label class="settings-label" for="dotDuration" data-i18n="settings.dot">点长</label>
+                    <output id="dotDurationValue" for="dotDuration">140 ms</output>
+                  </div>
+                  <input id="dotDuration" type="range" min="90" max="260" value="140" step="10" />
+                </div>
+              </div>
+            </details>
+          </div>
+          <textarea id="messageInput" spellcheck="false" rows="3">SOS WE NEED HELP</textarea>
+          <div class="tool-meta-row">
+            <div class="system-legend">
+              <span class="legend-pill"><span class="legend-swatch legend-swatch--glyph"></span><span data-i18n="legend.glyph">白色：字母骨架</span></span>
+              <span class="legend-pill"><span class="legend-swatch legend-swatch--cue"></span><span data-i18n="legend.cue">蓝色：记忆笔触</span></span>
+              <span class="legend-pill"><span class="legend-swatch legend-swatch--signal"></span><span data-i18n="legend.signal">红色：时值条</span></span>
+            </div>
+            <div class="control-row">
+              <button id="playMessageButton" class="primary-button" type="button" data-i18n="controls.playMessage">播放整句</button>
+              <button id="stopButton" class="secondary-button" type="button" data-i18n="controls.stop">停止</button>
+              <button id="sampleButton" class="ghost-button" type="button" data-i18n="controls.sample">载入示例</button>
+            </div>
+          </div>
+          <div class="tool-status-row">
+            <p class="status-line" id="statusLine"></p>
+            <p class="status-line muted" id="unsupportedLine"></p>
+          </div>
+          <div class="result-block">
+            <div class="field-head">
+              <span class="field-label" data-i18n="result.title">解析结果</span>
+              <span class="field-caption" data-i18n="result.caption">喇叭试听单字，停顿自动保留</span>
+            </div>
+            <div id="encodedOutput" class="message-grid" aria-live="polite"></div>
+          </div>
+        </div>
+      </section>
+
+      <details class="support-panel">
+        <summary class="support-summary">
+          <div>
+            <p class="eyebrow" data-i18n="library.eyebrow">字母库</p>
+            <h2 data-i18n="library.title">单字母试播与对照</h2>
+          </div>
+          <p data-i18n="library.summary">逐个核对字形、笔触和节奏。</p>
+        </summary>
+        <div class="support-body">
+          <div class="library-note">
+            <span class="library-note-chip" aria-hidden="true">
+              <span class="pause-bars"><i></i><i></i><i></i></span>
+              <span class="library-note-code">7U</span>
+            </span>
+            <p data-i18n="library.note">结果区里的间隔块表示单词停顿，标准时值是 7U。</p>
+          </div>
+          <div id="alphabetGrid" class="alphabet-grid"></div>
+        </div>
+      </details>
+
+      <details class="support-panel">
+        <summary class="support-summary">
+          <div>
+            <p class="eyebrow" data-i18n="guide.eyebrow">说明</p>
+            <h2 data-i18n="guide.title">规则与记忆方法</h2>
+          </div>
+          <p data-i18n="guide.summary">颜色含义、标准时值和样例对照。</p>
+        </summary>
+        <div class="support-body support-body--guide">
+          <section class="hero hero--support">
+            <div class="hero-copy">
+              <p class="eyebrow" data-i18n="guide.hero.eyebrow">工具说明</p>
+              <h1 data-i18n="guide.hero.title">把标准莫斯电码、字形记忆和试听实验放到同一个工作台里。</h1>
+              <p class="hero-summary" data-i18n="guide.hero.summary">
+                白色是字母骨架，蓝色是记忆笔触，红色是莫斯时值。整句输入、单字母试听和视频对照都沿用同一套字形母版。
+              </p>
+              <div class="hero-links">
+                <a href="https://x.com/i/status/2043505730075132063" target="_blank" rel="noreferrer" data-i18n="guide.hero.linkOriginal">原帖</a>
+                <a href="./reference/video-contact.jpg" target="_blank" rel="noreferrer" data-i18n="guide.hero.linkSheet">抽帧总览</a>
+              </div>
+            </div>
+            <aside class="hero-note">
+              <span class="note-label" data-i18n="guide.rules.label">播放规则</span>
+              <p data-i18n="guide.rules.body">本页使用标准国际莫斯电码。整句播放会自动处理点划、字母停顿和单词停顿。</p>
+              <ul class="fact-list">
+                <li data-i18n="guide.rules.dot">点：1 个单位时长</li>
+                <li data-i18n="guide.rules.dash">划：3 个单位时长</li>
+                <li data-i18n="guide.rules.letterGap">字母间停顿：3 个单位</li>
+                <li data-i18n="guide.rules.wordGap">单词间停顿：7 个单位</li>
+              </ul>
+            </aside>
+          </section>
+
+          <section class="analysis-panel">
+            <div class="analysis-copy">
+              <h2 data-i18n="guide.read.title">如何读这套记忆图</h2>
+              <p data-i18n="guide.read.body1">蓝色笔触不会改动编码本身，它只是把点和划贴着字母结构摆进去，帮助你把字形和节奏一起记住。</p>
+              <p data-i18n="guide.read.body2">下列样例是这套摆放逻辑的固定母版；整句输入和单字母播放都会沿用同一套规则。</p>
+            </div>
+            <div class="analysis-side">
+              <div class="analysis-legend">
+                <span class="legend-pill"><span class="legend-swatch legend-swatch--glyph"></span><span data-i18n="legend.glyph">白色：字母骨架</span></span>
+                <span class="legend-pill"><span class="legend-swatch legend-swatch--cue"></span><span data-i18n="legend.cue">蓝色：记忆笔触</span></span>
+                <span class="legend-pill"><span class="legend-swatch legend-swatch--signal"></span><span data-i18n="legend.signalLong">红色：莫斯时值</span></span>
+              </div>
+              <div class="analysis-examples">
+                <article class="analysis-example">
+                  <div class="analysis-example-head">
+                    <span class="analysis-letter">A</span>
+                    <span class="analysis-pattern">.-</span>
+                  </div>
+                  <p data-i18n="guide.examples.a">顶点放点，中横放划，字形和节奏一眼能对上。</p>
+                </article>
+                <article class="analysis-example">
+                  <div class="analysis-example-head">
+                    <span class="analysis-letter">S</span>
+                    <span class="analysis-pattern">...</span>
+                  </div>
+                  <p data-i18n="guide.examples.s">三个点沿主轴下排，是最直接的 SOS 记忆方式。</p>
+                </article>
+                <article class="analysis-example">
+                  <div class="analysis-example-head">
+                    <span class="analysis-letter">O</span>
+                    <span class="analysis-pattern">---</span>
+                  </div>
+                  <p data-i18n="guide.examples.o">三条长划沿外圈分布，重点是贴边，不占中腔。</p>
+                </article>
+                <article class="analysis-example">
+                  <div class="analysis-example-head">
+                    <span class="analysis-letter">Q</span>
+                    <span class="analysis-pattern">--.-</span>
+                  </div>
+                  <p data-i18n="guide.examples.q">先沿外环走两笔，再落一点，最后把尾巴单独补上。</p>
+                </article>
+              </div>
+            </div>
+          </section>
+        </div>
+      </details>
+
+      <details class="support-panel">
+        <summary class="support-summary">
+          <div>
+            <p class="eyebrow" data-i18n="video.eyebrow">参考视频</p>
+            <h2 data-i18n="video.title">原视频对照</h2>
+          </div>
+          <p data-i18n="video.summary">需要校对笔触时再展开。</p>
+        </summary>
+        <div class="support-body">
+          <section class="video-panel">
+            <div class="video-copy">
+              <p class="eyebrow" data-i18n="video.eyebrow">参考视频</p>
+              <h2 data-i18n="video.panelTitle">需要校对笔触时，可以直接对照原视频。</h2>
+              <p data-i18n="video.body">这里放的是抓下来的本地视频文件。适合在调字形、看节奏或者核对某个字母的蓝色笔触位置时直接比照。</p>
+              <p class="video-meta">
+                <span data-i18n="video.meta.prefix">本地文件：</span><code>reference/source.mp4</code><span data-i18n="video.meta.suffix">。已开启循环，默认静音自动播放，也可以手动打开声音。</span>
+              </p>
+            </div>
+            <div class="video-frame">
+              <video
+                class="reference-video"
+                src="./reference/source.mp4"
+                poster="./reference/video-contact.jpg"
+                controls
+                muted
+                loop
+                autoplay
+                playsinline
+                preload="metadata"
+              ></video>
+            </div>
+          </section>
+        </div>
+      </details>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

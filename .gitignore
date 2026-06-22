@@ -1,0 +1,8 @@
+.DS_Store
+.impeccable.md
+font-test.html
+font-tests/
+
+# Local design iterations and screenshots that are not used by the published site.
+/*.png
+/reference/ui-*.png
